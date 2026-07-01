@@ -7,6 +7,7 @@ import { SubmitExpensePage } from './pages/SubmitExpensePage';
 import { MyExpensesPage } from './pages/MyExpensesPage';
 import { ApprovalQueuePage } from './pages/ApprovalQueuePage';
 import { FinanceDashboardPage } from './pages/FinanceDashboardPage';
+import { AdminUsersPage } from './pages/AdminUsersPage';
 
 /** Sends an authenticated user to the landing page appropriate for their role. */
 function RoleHome() {
@@ -20,6 +21,8 @@ function RoleHome() {
       return <Navigate to="/approvals" replace />;
     case 'FINANCE_MANAGER':
       return <Navigate to="/dashboard" replace />;
+    case 'ADMIN':
+      return <Navigate to="/admin/users" replace />;
     default:
       return <Navigate to="/login" replace />;
   }
@@ -41,6 +44,9 @@ export default function App() {
           </Route>
           <Route element={<ProtectedRoute roles={['FINANCE_MANAGER']} />}>
             <Route path="/dashboard" element={<FinanceDashboardPage />} />
+          </Route>
+          <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+            <Route path="/admin/users" element={<AdminUsersPage />} />
           </Route>
         </Route>
       </Route>

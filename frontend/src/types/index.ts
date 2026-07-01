@@ -1,4 +1,4 @@
-export type Role = 'EMPLOYEE' | 'TEAM_LEAD' | 'FINANCE_MANAGER';
+export type Role = 'EMPLOYEE' | 'TEAM_LEAD' | 'FINANCE_MANAGER' | 'ADMIN';
 
 export type Category = 'TRAVEL' | 'MEALS' | 'SUPPLIES' | 'SOFTWARE' | 'OTHER';
 
@@ -74,4 +74,22 @@ export interface DashboardResponse {
   grandTotalCount: number;
 }
 
+export interface DepartmentSummary {
+  id: number;
+  name: string;
+}
+
+export interface AdminUserResponse {
+  id: number;
+  email: string;
+  fullName: string;
+  role: Role;
+  departmentId: number | null;
+  departmentName: string | null;
+  enabled: boolean;
+  createdAt: string;
+}
+
 export const CATEGORIES: Category[] = ['TRAVEL', 'MEALS', 'SUPPLIES', 'SOFTWARE', 'OTHER'];
+
+export const ROLES: Role[] = ['EMPLOYEE', 'TEAM_LEAD', 'FINANCE_MANAGER', 'ADMIN'];

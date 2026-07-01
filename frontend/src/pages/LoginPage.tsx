@@ -8,6 +8,7 @@ const HOME_BY_ROLE: Record<Role, string> = {
   EMPLOYEE: '/submit',
   TEAM_LEAD: '/approvals',
   FINANCE_MANAGER: '/dashboard',
+  ADMIN: '/admin/users',
 };
 
 export function LoginPage() {

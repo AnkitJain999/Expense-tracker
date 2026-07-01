@@ -11,6 +11,12 @@
         "-Dspring-boot.run.jvmArguments=-DDB_PASSWORD=0000"
       ],
       "port": 8080
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "frontend"],
+      "port": 5173
     }
   ]
 }

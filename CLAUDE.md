@@ -74,14 +74,20 @@ approver for that stage — this is enforced in `ApprovalService.loadForDecision
 
 ### Roles and authorization
 
-Three roles (`user/Role.java`): `EMPLOYEE`, `TEAM_LEAD`, `FINANCE_MANAGER`. A user has exactly one
-role and belongs to at most one department (`department_id` on `users`, nullable — employees without
-a department cannot submit expenses). Authorization is layered:
+Four roles (`user/Role.java`): `EMPLOYEE`, `TEAM_LEAD`, `FINANCE_MANAGER`, `ADMIN`. A user has exactly
+one role and belongs to at most one department (`department_id` on `users`, nullable — employees
+without a department cannot submit expenses). Authorization is layered:
 - Coarse-grained: `@PreAuthorize("hasRole(...)")` / `hasAnyRole(...)` on controllers.
 - Fine-grained, data-dependent: hand-written checks in services — e.g. `ExpenseService.authorizeView`
   (owner, or the department's assigned Team Lead/Finance Manager may view an expense/receipt) and
   `ApprovalService.loadForDecision` (must be the *assigned* approver for that department and stage,
   not just hold the role).
+
+`ADMIN` is a standalone role for user management only — it does not submit or approve expenses.
+`UserController` (`/api/v1/admin/users`, class-level `@PreAuthorize("hasRole('ADMIN')")`) lets an
+admin create new accounts (any role, optional department) and list existing users; `UserService`
+hashes the password and checks email uniqueness. `DepartmentController` (`/api/v1/departments`,
+also admin-only) backs the department dropdown on that form.
 
 ### Auth
 
@@ -115,19 +121,22 @@ the console instead of sent (`app.mail.log-only`, see `application-dev.yml`) —
 `config/DataSeeder.java` runs only under the `dev` profile with `app.seed.enabled=true`, and only if
 the `users` table is empty (idempotent). It creates two departments (Engineering, Marketing) with
 their Team Lead/Finance Manager, a few employees, and sample expenses across every status so the
-approval queues and dashboard have realistic data. All seeded users share the password
-`password123` (e.g. `alice@company.com`, `bob.lead@company.com`, `fiona.finance@company.com`).
+approval queues and dashboard have realistic data, plus one `ADMIN` user. All seeded users share
+the password `password123` (e.g. `alice@company.com`, `bob.lead@company.com`,
+`fiona.finance@company.com`, `admin@company.com`).
 
 ### Frontend
 
 Role-based routing lives in `App.tsx`: after login, `RoleHome` redirects each role to its landing
-page (`EMPLOYEE` → `/submit`, `TEAM_LEAD` → `/approvals`, `FINANCE_MANAGER` → `/dashboard`), and
-`ProtectedRoute` (`auth/ProtectedRoute.tsx`) gates routes both on auth and on an optional `roles`
-allow-list. `AuthContext` holds the current user and bootstraps it from a stored JWT on load.
+page (`EMPLOYEE` → `/submit`, `TEAM_LEAD` → `/approvals`, `FINANCE_MANAGER` → `/dashboard`,
+`ADMIN` → `/admin/users`), and `ProtectedRoute` (`auth/ProtectedRoute.tsx`) gates routes both on
+auth and on an optional `roles` allow-list. `AuthContext` holds the current user and bootstraps it
+from a stored JWT on load.
 
 `api/client.ts` is a single Axios instance: it attaches the bearer token from `localStorage` on every
 request and, on any `401` response, clears the token and redirects to `/login`. Per-feature API
-modules (`api/auth.ts`, `api/expenses.ts`, `api/approvals.ts`, `api/dashboard.ts`) wrap this client;
+modules (`api/auth.ts`, `api/expenses.ts`, `api/approvals.ts`, `api/dashboard.ts`, `api/admin.ts`)
+wrap this client;
 add new endpoints there rather than calling `axios`/`api` directly from components. Shared
 request/response shapes are mirrored by hand in `types/index.ts` and must be kept in sync with the
 backend DTOs (`expense/dto/*`, `approval/dto/*`, `auth/dto/*`, `dashboard/DashboardResponse.java`) —

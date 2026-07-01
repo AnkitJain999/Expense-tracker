@@ -75,6 +75,7 @@ public class DataSeeder implements CommandLineRunner {
         Department engineering = departmentRepository.save(new Department("Engineering", null, null));
         Department marketing = departmentRepository.save(new Department("Marketing", null, null));
 
+        createUser("admin@company.com", "Ada Admin", Role.ADMIN, null);
         User fiona = createUser("fiona.finance@company.com", "Fiona Finance", Role.FINANCE_MANAGER, null);
         User bob = createUser("bob.lead@company.com", "Bob Lead", Role.TEAM_LEAD, engineering.getId());
         User dan = createUser("dan.lead@company.com", "Dan Lead", Role.TEAM_LEAD, marketing.getId());
