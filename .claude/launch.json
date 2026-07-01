@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "backend\\mvnw.cmd",
+      "runtimeArgs": [
+        "-f",
+        "backend/pom.xml",
+        "spring-boot:run",
+        "-Dspring-boot.run.jvmArguments=-DDB_PASSWORD=0000"
+      ],
+      "port": 8080
+    }
+  ]
+}
