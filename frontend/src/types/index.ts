@@ -77,6 +77,10 @@ export interface DashboardResponse {
 export interface DepartmentSummary {
   id: number;
   name: string;
+  teamLeadId: number | null;
+  teamLeadName: string | null;
+  financeManagerId: number | null;
+  financeManagerName: string | null;
 }
 
 export interface AdminUserResponse {

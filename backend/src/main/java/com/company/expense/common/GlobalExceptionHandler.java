@@ -3,6 +3,7 @@ package com.company.expense.common;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,6 +36,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUploadSize(MaxUploadSizeExceededException ex,
                                                      HttpServletRequest request) {
         return build(HttpStatus.PAYLOAD_TOO_LARGE, "Receipt exceeds the maximum allowed size", request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrity(DataIntegrityViolationException ex,
+                                                        HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, "This record cannot be deleted because it is referenced by other data",
+                request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

@@ -8,6 +8,10 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     Optional<Department> findByName(String name);
 
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, Long id);
+
     List<Department> findByTeamLeadId(Long teamLeadId);
 
     List<Department> findByFinanceManagerId(Long financeManagerId);

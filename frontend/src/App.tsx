@@ -8,6 +8,7 @@ import { MyExpensesPage } from './pages/MyExpensesPage';
 import { ApprovalQueuePage } from './pages/ApprovalQueuePage';
 import { FinanceDashboardPage } from './pages/FinanceDashboardPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
+import { AdminDepartmentsPage } from './pages/AdminDepartmentsPage';
 
 /** Sends an authenticated user to the landing page appropriate for their role. */
 function RoleHome() {
@@ -47,6 +48,7 @@ export default function App() {
           </Route>
           <Route element={<ProtectedRoute roles={['ADMIN']} />}>
             <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
           </Route>
         </Route>
       </Route>

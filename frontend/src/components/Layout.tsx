@@ -23,7 +23,12 @@ export function Layout() {
           )}
           {hasRole('TEAM_LEAD', 'FINANCE_MANAGER') && <NavLink to="/approvals">Approvals</NavLink>}
           {hasRole('FINANCE_MANAGER') && <NavLink to="/dashboard">Dashboard</NavLink>}
-          {hasRole('ADMIN') && <NavLink to="/admin/users">Users</NavLink>}
+          {hasRole('ADMIN') && (
+            <>
+              <NavLink to="/admin/users">Users</NavLink>
+              <NavLink to="/admin/departments">Departments</NavLink>
+            </>
+          )}
         </nav>
         <div className="user-box">
           {user && (
