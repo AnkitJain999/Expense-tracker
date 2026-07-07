@@ -3,6 +3,7 @@ package com.company.expense.notification;
 import com.company.expense.department.Department;
 import com.company.expense.department.DepartmentRepository;
 import com.company.expense.expense.Expense;
+import com.company.expense.user.Role;
 import com.company.expense.user.User;
 import com.company.expense.user.UserRepository;
 import java.util.Optional;
@@ -44,6 +45,18 @@ public class EmailNotificationService {
         this.from = from;
         this.enabled = enabled;
         this.logOnly = logOnly;
+    }
+
+    @Async
+    public void notifyAccountCreated(User user, String plainTextPassword) {
+        String role = user.getRole().name().replace('_', ' ');
+        String body = "Hi " + user.getFullName() + ",\n\n"
+                + "Your account has been created.\n\n"
+                + "Email:    " + user.getEmail() + "\n"
+                + "Password: " + plainTextPassword + "\n"
+                + "Role:     " + role + "\n\n"
+                + "Please log in and change your password as soon as possible.";
+        send(user.getEmail(), "Your account has been created", body);
     }
 
     @Async

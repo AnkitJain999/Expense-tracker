@@ -3,6 +3,7 @@ package com.company.expense.user;
 import com.company.expense.common.ApiException;
 import com.company.expense.department.Department;
 import com.company.expense.department.DepartmentRepository;
+import com.company.expense.notification.EmailNotificationService;
 import com.company.expense.user.dto.CreateUserRequest;
 import com.company.expense.user.dto.UserResponse;
 import java.util.Comparator;
@@ -19,12 +20,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailNotificationService emailNotificationService;
 
     public UserService(UserRepository userRepository, DepartmentRepository departmentRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, EmailNotificationService emailNotificationService) {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Transactional
@@ -40,6 +43,7 @@ public class UserService {
         User user = new User(request.email(), passwordEncoder.encode(request.password()),
                 request.fullName(), request.role(), department == null ? null : department.getId());
         user = userRepository.save(user);
+        emailNotificationService.notifyAccountCreated(user, request.password());
         return UserResponse.of(user, department == null ? null : department.getName());
     }
 

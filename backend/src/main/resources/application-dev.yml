@@ -6,4 +6,4 @@ app:
     # In dev, if no SMTP server is reachable, emails are logged to the console
     # instead of sent. Point MAIL_HOST/MAIL_PORT at Mailhog (localhost:1025) to
     # capture them in a UI.
-    log-only: ${APP_MAIL_LOG_ONLY:true}
+    log-only: ${APP_MAIL_LOG_ONLY:false}
