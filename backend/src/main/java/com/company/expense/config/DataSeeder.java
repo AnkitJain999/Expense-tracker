@@ -121,7 +121,7 @@ public class DataSeeder implements CommandLineRunner {
                                String description, ExpenseStatus status, User teamLead, User financeManager,
                                boolean withReceipt) {
         Expense expense = new Expense(submitter.getId(), dept.getId(), category,
-                new BigDecimal(amount), "USD", description);
+                new BigDecimal(amount), "INR", description);
         expense.setStatus(status);
         expense = expenseRepository.save(expense);
 

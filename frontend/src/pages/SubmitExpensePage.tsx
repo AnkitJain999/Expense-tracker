@@ -53,7 +53,7 @@ export function SubmitExpensePage() {
           </select>
         </label>
         <label>
-          Amount (USD)
+          Amount (INR)
           <input
             type="number"
             step="0.01"

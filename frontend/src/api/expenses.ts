@@ -14,7 +14,7 @@ export async function submitExpense(input: SubmitExpenseInput): Promise<ExpenseR
   const data = {
     category: input.category,
     amount: input.amount,
-    currency: input.currency ?? 'USD',
+    currency: input.currency ?? 'INR',
     description: input.description,
   };
   // The "data" part is JSON; the "receipt" part is the file.
