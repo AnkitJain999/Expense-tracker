@@ -68,6 +68,10 @@ public class ExpenseService {
 
         Expense expense = new Expense(principal.getId(), departmentId, request.category(),
                 request.amount(), currency, request.description());
+        // A Team Lead can't approve their own expense, so their submissions skip straight to Finance.
+        if (principal.getRole() == Role.TEAM_LEAD) {
+            expense.setStatus(ExpenseStatus.PENDING_FINANCE);
+        }
         expense = expenseRepository.save(expense);
 
         if (receiptFile != null && !receiptFile.isEmpty()) {
@@ -76,7 +80,11 @@ public class ExpenseService {
 
         approvalEventRepository.save(new ApprovalEvent(
                 expense.getId(), principal.getId(), ApprovalAction.SUBMITTED, null));
-        notifications.notifySubmitted(expense);
+        if (expense.getStatus() == ExpenseStatus.PENDING_FINANCE) {
+            notifications.notifySubmittedDirectToFinance(expense);
+        } else {
+            notifications.notifySubmitted(expense);
+        }
 
         return toResponse(expense);
     }

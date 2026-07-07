@@ -68,6 +68,15 @@ public class EmailNotificationService {
     }
 
     @Async
+    public void notifySubmittedDirectToFinance(Expense expense) {
+        approver(expense, false).ifPresent(financeManager -> send(financeManager.getEmail(),
+                "New expense awaiting your approval",
+                "A new expense (#" + expense.getId() + ", " + expense.getAmount() + " "
+                        + expense.getCurrency() + ") was submitted by a Team Lead and is pending your review"
+                        + " as Finance Manager."));
+    }
+
+    @Async
     public void notifyTeamLeadApproved(Expense expense) {
         approver(expense, false).ifPresent(financeManager -> send(financeManager.getEmail(),
                 "Expense awaiting finance approval",

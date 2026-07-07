@@ -32,7 +32,7 @@ public class ExpenseController {
      * plus an optional "receipt" file part.
      */
     @PostMapping(consumes = "multipart/form-data")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TEAM_LEAD')")
     @ResponseStatus(HttpStatus.CREATED)
     public ExpenseResponse submit(
             @Valid @RequestPart("data") SubmitExpenseRequest data,
@@ -41,7 +41,7 @@ public class ExpenseController {
     }
 
     @GetMapping("/mine")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TEAM_LEAD')")
     public List<ExpenseResponse> mine() {
         return expenseService.listMine(SecurityUtils.currentUser());
     }

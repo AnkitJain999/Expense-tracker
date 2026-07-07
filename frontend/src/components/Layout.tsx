@@ -15,7 +15,7 @@ export function Layout() {
       <header className="app-header">
         <div className="brand">Expense Tracker</div>
         <nav className="nav">
-          {hasRole('EMPLOYEE') && (
+          {hasRole('EMPLOYEE', 'TEAM_LEAD') && (
             <>
               <NavLink to="/submit">Submit</NavLink>
               <NavLink to="/my-expenses">My Expenses</NavLink>

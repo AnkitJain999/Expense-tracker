@@ -25,7 +25,8 @@ export function SubmitExpensePage() {
     setSubmitting(true);
     try {
       const created = await submitExpense({ category, amount: parsedAmount, description, receipt });
-      setMessage(`Expense #${created.id} submitted and is pending Team Lead approval.`);
+      const pendingStage = created.status === 'PENDING_FINANCE' ? 'Finance Manager' : 'Team Lead';
+      setMessage(`Expense #${created.id} submitted and is pending ${pendingStage} approval.`);
       setAmount('');
       setDescription('');
       setReceipt(null);

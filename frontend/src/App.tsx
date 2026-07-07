@@ -36,7 +36,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
           <Route path="/" element={<RoleHome />} />
-          <Route element={<ProtectedRoute roles={['EMPLOYEE']} />}>
+          <Route element={<ProtectedRoute roles={['EMPLOYEE', 'TEAM_LEAD']} />}>
             <Route path="/submit" element={<SubmitExpensePage />} />
             <Route path="/my-expenses" element={<MyExpensesPage />} />
           </Route>
