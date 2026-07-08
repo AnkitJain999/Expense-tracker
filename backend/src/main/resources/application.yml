@@ -42,7 +42,7 @@ app:
     secret: ${APP_JWT_SECRET:Y2hhbmdlLW1lLXRoaXMtaXMtYS1kZXYtb25seS1zZWNyZXQta2V5LTEyMzQ1Ng==}
     expiration-minutes: ${APP_JWT_EXPIRATION_MINUTES:480}
   cors:
-    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:5173}
+    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
   mail:
     from: ${APP_MAIL_FROM:no-reply@expense-tracker.local}
     enabled: ${APP_MAIL_ENABLED:true}

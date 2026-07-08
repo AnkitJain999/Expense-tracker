@@ -1,0 +1,105 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: expense-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - expense-network
+
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: expense-mailhog
+    restart: unless-stopped
+
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+    networks:
+      - expense-network
+
+
+  backend:
+    build:
+      context: ./backend
+
+    image: expense-backend:latest
+
+    container_name: expense-backend
+
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+
+      SPRING_PROFILES_ACTIVE: dev
+
+      TZ: Asia/Kolkata
+
+    ports:
+      - "8080:8080"
+
+    networks:
+      - expense-network
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    image: expense-frontend:latest
+
+    container_name: expense-frontend
+
+    restart: unless-stopped
+
+    depends_on:
+      - backend
+
+    ports:
+      - "3000:80"
+
+    networks:
+      - expense-network
+
+
+volumes:
+  postgres-data:
+
+
+networks:
+  expense-network:
+    driver: bridge
